@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI Image Classification</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+
+      h1 {
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      .upload-container {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 350px;
+      }
+
+      .file-input {
+        display: none;
+      }
+
+      .upload-label {
+        display: block;
+        padding: 15px;
+        border: 2px dashed #007bff;
+        background: #e9f5ff;
+        cursor: pointer;
+        border-radius: 5px;
+        color: #007bff;
+        font-size: 16px;
+        margin-bottom: 15px;
+      }
+
+      .upload-label:hover {
+        background: #d0ebff;
+      }
+
+      button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 100%;
+      }
+
+      button:hover {
+        background: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>AI Image Classification</h1>
+    <div class="upload-container">
+      <form action="/predict" method="post" enctype="multipart/form-data">
+        <label for="file-upload" class="upload-label"
+          >Click to upload or drag & drop</label
+        >
+        <input type="file" name="file" id="file-upload" class="file-input" />
+        <button type="submit">Upload</button>
+      </form>
+    </div>
+
+    <script>
+      const fileInput = document.getElementById("file-upload");
+      const label = document.querySelector(".upload-label");
+
+      label.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        label.style.background = "#d0ebff";
+      });
+
+      label.addEventListener("dragleave", () => {
+        label.style.background = "#e9f5ff";
+      });
+
+      label.addEventListener("drop", (event) => {
+        event.preventDefault();
+        fileInput.files = event.dataTransfer.files;
+        label.innerText = fileInput.files[0].name;
+      });
+
+      fileInput.addEventListener("change", () => {
+        if (fileInput.files.length > 0) {
+          label.innerText = fileInput.files[0].name;
+        }
+      });
+    </script>
+  </body>
+</html>
