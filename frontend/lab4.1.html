@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sentiment Analysis</title>
+  </head>
+  <body>
+    <h2>Nhập đánh giá của bạn:</h2>
+    <label for="inputText">Nhập văn bản cần phân tích:</label><br />
+    <textarea
+      id="inputText"
+      rows="4"
+      cols="50"
+      placeholder="Nhập đánh giá của bạn ở đây..."
+      title="Vui lòng nhập nội dung để phân tích"
+    ></textarea
+    ><br />
+    <button id="analyzeBtn">Phân tích</button>
+    <p>Kết quả: <span id="result"></span></p>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const analyzeBtn = document.getElementById("analyzeBtn");
+
+        analyzeBtn.addEventListener("click", async () => {
+          const inputText = document.getElementById("inputText").value;
+          console.log("Gửi yêu cầu với text:", inputText);
+
+          try {
+            const response = await fetch("http://127.0.0.1:5000/analyze", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ text: inputText }),
+            });
+            const data = await response.json();
+            console.log("Dữ liệu nhận được:", data);
+
+            let resultsArray =
+              Array.isArray(data) && data.length > 0 ? data[0] : [];
+
+            if (!Array.isArray(resultsArray) || resultsArray.length === 0) {
+              throw new Error("Dữ liệu API không hợp lệ!");
+            }
+
+            resultsArray.sort((a, b) => b.score - a.score);
+            const result = resultsArray[0];
+
+            let icon = "";
+            if (result.label === "POSITIVE") {
+              icon = "👍";
+            } else if (result.label === "NEGATIVE") {
+              icon = "👎";
+            } else {
+              icon = "😐";
+            }
+
+            document.getElementById("result").innerHTML = `
+                <div style="font-size: 1.5em; display: flex; align-items: center;">
+                    <span style="margin-right: 10px;">${icon}</span>
+                    <span>${result.label} (${(result.score * 100).toFixed(
+              2
+            )}%)</span>
+                </div>
+            `;
+          } catch (error) {
+            console.error("Lỗi khi gọi API:", error);
+            document.getElementById("result").innerText =
+              "Có lỗi xảy ra: " + error.message;
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
