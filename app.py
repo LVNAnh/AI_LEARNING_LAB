@@ -1,12 +1,17 @@
 from flask import Flask, request, jsonify
 import requests
 from flask_cors import CORS
+from dotenv import load_dotenv
+import os
+
+load_dotenv() 
 
 app = Flask(__name__)
 CORS(app)
 
 HUGGING_FACE_API_URL = "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english"
-HEADERS = {"Authorization": "Bearer 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"}
+HUGGING_FACE_API_KEY = os.environ.get("HUGGING_FACE_API_KEY")
+HEADERS = {"Authorization": f"Bearer {HUGGING_FACE_API_KEY}"}
 
 @app.route("/analyze", methods=["POST"])
 def analyze_sentiment():
