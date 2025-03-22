@@ -1,3 +1,5 @@
+# CÁC LAB CÒN LẠI NẰM TRONG CÁC BRANCHES KHÁC.
+
 # Resize Hình Ảnh và Phân Loại với MobileNet
 
 # Các Lab khác nằm trong các branches khác
